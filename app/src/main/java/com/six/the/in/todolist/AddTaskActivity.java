@@ -1,17 +1,32 @@
 package com.six.the.in.todolist;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 public class AddTaskActivity extends ActionBarActivity {
+
+    Button addButton;
+    EditText newTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        addButton = (Button) findViewById(R.id.add_button);
+        newTask = (EditText) findViewById(R.id.new_task);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setResult(RESULT_OK, getIntent().putExtra("Task Name", newTask.getText().toString()));
+                finish();
+            }
+        });
     }
 
     @Override
@@ -35,4 +50,8 @@ public class AddTaskActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
 }

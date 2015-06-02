@@ -14,6 +14,9 @@ import android.widget.ListView;
 public class MainActivity extends ActionBarActivity {
     ListView listView;
     Button newTaskButton;
+    ArrayAdapter<String> arrayAdapter;
+
+    static final int ADD_TASK = 1;  // The request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +25,11 @@ public class MainActivity extends ActionBarActivity {
 
         listView = (ListView) findViewById(R.id.list_view);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        arrayAdapter = new ArrayAdapter<String>(
                 this,
                 R.layout.list_element,
                 R.id.element_text
         );
-
-        arrayAdapter.add("Pick up laundry");
-        arrayAdapter.add("Homework");
 
         listView.setAdapter(arrayAdapter);
 
@@ -37,11 +37,20 @@ public class MainActivity extends ActionBarActivity {
         newTaskButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
-                startActivity(intent);
-
+                startActivityForResult(intent, ADD_TASK);
             }
         });
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == ADD_TASK) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                arrayAdapter.add(data.getStringExtra("Task Name"));
+            }
+        }
     }
 
 
