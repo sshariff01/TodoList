@@ -8,7 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/task_complete_check"
-        android:onClick="onCheckboxClicked" />
+        android:onClick="onCheckboxClicked"
+        android:focusable="false" />
 
     <TextView
         android:id="@+id/element_text"

@@ -6,18 +6,25 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
+    LinearLayout lowestLayout;
     ArrayAdapter<String> arrayAdapter;
     ListView listView;
     Button newTaskButton;
     CheckBox checkBox;
+
+    float historicX = Float.NaN, historicY = Float.NaN;
+    static final int DELTA = 50;
+    enum Direction {LEFT, RIGHT;}
 
 
     static final int ADD_TASK = 1;  // The request code
@@ -36,6 +43,15 @@ public class MainActivity extends ActionBarActivity {
         );
 
         listView.setAdapter(arrayAdapter);
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int pos, long id) {
+                // TODO Auto-generated method stub
+                arrayAdapter.remove(arg0.getItemAtPosition(pos).toString());
+                return true;
+            }
+        });
 
         newTaskButton = (Button) findViewById(R.id.new_task_button);
         newTaskButton.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +62,8 @@ public class MainActivity extends ActionBarActivity {
         });
 
     }
+
+
 
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
