@@ -8,13 +8,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
+    ArrayAdapter<String> arrayAdapter;
     ListView listView;
     Button newTaskButton;
-    ArrayAdapter<String> arrayAdapter;
+    CheckBox checkBox;
+
 
     static final int ADD_TASK = 1;  // The request code
 
@@ -42,6 +46,15 @@ public class MainActivity extends ActionBarActivity {
         });
 
     }
+
+    public void onCheckboxClicked(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+
+        if (checked) {
+            Toast.makeText(MainActivity.this, "Task Complete!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
