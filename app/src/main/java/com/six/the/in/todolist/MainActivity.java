@@ -1,5 +1,6 @@
 package com.six.the.in.todolist;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,19 +14,16 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.app.AlertDialog;
+
+
 
 
 public class MainActivity extends ActionBarActivity {
-    LinearLayout lowestLayout;
     ArrayAdapter<String> arrayAdapter;
     ListView listView;
     Button newTaskButton;
-    CheckBox checkBox;
-
-    float historicX = Float.NaN, historicY = Float.NaN;
-    static final int DELTA = 50;
-    enum Direction {LEFT, RIGHT;}
-
+    String listItem;
 
     static final int ADD_TASK = 1;  // The request code
 
@@ -44,13 +42,26 @@ public class MainActivity extends ActionBarActivity {
 
         listView.setAdapter(arrayAdapter);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int pos, long id) {
-                // TODO Auto-generated method stub
-                arrayAdapter.remove(arg0.getItemAtPosition(pos).toString());
+                listItem = arg0.getItemAtPosition(pos).toString();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Delete Item?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                arrayAdapter.remove(listItem);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) { }
+                        }).show();
+
                 return true;
             }
+
+
         });
 
         newTaskButton = (Button) findViewById(R.id.new_task_button);
@@ -62,8 +73,6 @@ public class MainActivity extends ActionBarActivity {
         });
 
     }
-
-
 
     public void onCheckboxClicked(View view) {
         boolean checked = ((CheckBox) view).isChecked();
