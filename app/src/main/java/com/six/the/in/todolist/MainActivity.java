@@ -73,9 +73,15 @@ public class MainActivity extends ActionBarActivity {
 //                return true;
 //            }
 //        });
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> arg0, View arg1, final int pos, long arg3) {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, final int pos, long arg3) {
+                CheckBox checkBox = (CheckBox) findViewById(R.id.task_complete_check);
+                checkBox.setChecked(!checkBox.isChecked());
+                if (checkBox.isChecked()) {
+                    Toast.makeText(MainActivity.this, "Task Complete!", Toast.LENGTH_SHORT).show();
+                }
+//
 //                listItem = adapterList.get(pos).toString();
 //                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 //                builder.setMessage("Edit Item?")
@@ -92,8 +98,8 @@ public class MainActivity extends ActionBarActivity {
 //                            @Override
 //                            public void onClick(DialogInterface dialog, int which) { }
 //                        }).show();
-//            }
-//        });
+            }
+        });
     }
 
     @Override
