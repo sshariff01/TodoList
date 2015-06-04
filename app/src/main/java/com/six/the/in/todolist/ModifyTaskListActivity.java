@@ -9,21 +9,34 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
-public class AddTaskActivity extends ActionBarActivity {
-
+public class ModifyTaskListActivity extends ActionBarActivity {
     Button addButton;
-    EditText newTask;
+    EditText taskToModify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_task);
+        setContentView(R.layout.activity_modify_task_list);
 
         addButton = (Button) findViewById(R.id.add_button);
-        newTask = (EditText) findViewById(R.id.new_task);
+        taskToModify = (EditText) findViewById(R.id.new_task);
+        if (
+                getIntent().getStringExtra("itemToEdit") != null
+                && !getIntent().getStringExtra("itemToEdit").isEmpty()
+                ) {
+            taskToModify.setText(getIntent().getStringExtra("itemToEdit").toString());
+        }
+
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setResult(RESULT_OK, getIntent().putExtra("Task Name", newTask.getText().toString()));
+                String taskName = taskToModify.getText().toString();
+
+                if (taskName == null || taskName.equals("")) finish();
+
+                getIntent().putExtra("taskName", taskName);
+                getIntent().putExtra("position", getIntent().getIntExtra("pos", -1));
+
+                setResult(RESULT_OK, getIntent());
                 finish();
             }
         });
