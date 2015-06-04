@@ -1,10 +1,9 @@
 package com.six.the.in.todolist;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,64 +44,103 @@ public class MainActivity extends ActionBarActivity {
         );
 
         listView.setAdapter(arrayAdapter);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int pos, long id) {
-                listItem = adapterList.get(pos).toString();
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("Delete Item?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                adapterList.remove(listItem);
-                                arrayAdapter = new ArrayAdapter<String>(
-                                        MainActivity.this,
-                                        R.layout.list_element,
-                                        R.id.element_text,
-                                        adapterList
-                                );
-                                listView.setAdapter(arrayAdapter);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) { }
-                        }).show();
 
-                return true;
-            }
-        });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, final int pos, long arg3) {
-                listItem = adapterList.get(pos).toString();
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("Edit Item?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(MainActivity.this, ModifyTaskListActivity.class);
-                                intent.putExtra("itemToEdit", listItem);
-                                intent.putExtra("pos", pos);
-                                startActivityForResult(intent, EDIT_TASK);
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) { }
-                        }).show();
-            }
-        });
-
-//        newTaskButton = (Button) findViewById(R.id.new_task_button);
-//        newTaskButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, ModifyTaskListActivity.class);
-//                startActivityForResult(intent, ADD_TASK);
+        registerForContextMenu(listView);
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+//                                           int pos, long id) {
+//                listItem = adapterList.get(pos).toString();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                builder.setMessage("Delete Item?")
+//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                adapterList.remove(listItem);
+//                                arrayAdapter = new ArrayAdapter<String>(
+//                                        MainActivity.this,
+//                                        R.layout.list_element,
+//                                        R.id.element_text,
+//                                        adapterList
+//                                );
+//                                listView.setAdapter(arrayAdapter);
+//                            }
+//                        })
+//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) { }
+//                        }).show();
+//
+//                return true;
 //            }
 //        });
-
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1, final int pos, long arg3) {
+//                listItem = adapterList.get(pos).toString();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                builder.setMessage("Edit Item?")
+//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Intent intent = new Intent(MainActivity.this, ModifyTaskListActivity.class);
+//                                intent.putExtra("itemToEdit", listItem);
+//                                intent.putExtra("pos", pos);
+//                                startActivityForResult(intent, EDIT_TASK);
+//                            }
+//                        })
+//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) { }
+//                        }).show();
+//            }
+//        });
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.list_view) {
+//            ListView lv = (ListView) v;
+//            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
+//            String obj = (String) lv.getItemAtPosition(acmi.position);
+
+            menu.add(Menu.NONE, R.id.action_edit_task, Menu.NONE, R.string.action_edit_task);
+            menu.add(Menu.NONE, R.id.action_remove_task, Menu.NONE, R.string.action_remove_task);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info;
+        switch (item.getItemId()) {
+            case R.id.action_edit_task:
+                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                listItem = adapterList.get(info.position).toString();
+                Intent intent = new Intent(MainActivity.this, ModifyTaskListActivity.class);
+                intent.putExtra("itemToEdit", listItem);
+                intent.putExtra("pos", info.position);
+
+                startActivityForResult(intent, EDIT_TASK);
+                return true;
+            case R.id.action_remove_task:
+                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                listItem = adapterList.get(info.position).toString();
+                adapterList.remove(listItem);
+                arrayAdapter = new ArrayAdapter<String>(
+                        MainActivity.this,
+                        R.layout.list_element,
+                        R.id.element_text,
+                        adapterList
+                );
+                listView.setAdapter(arrayAdapter);
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+
 
     public void onCheckboxClicked(View view) {
         if (((CheckBox) view).isChecked()) {
