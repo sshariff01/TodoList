@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,7 +21,6 @@ public class MainActivity extends ActionBarActivity {
     ArrayAdapter<String> arrayAdapter;
     List<String> adapterList;
     ListView listView;
-    Button newTaskButton;
     String listItem;
 
     static final int ADD_TASK = 1;  // The request code
@@ -46,33 +44,7 @@ public class MainActivity extends ActionBarActivity {
         listView.setAdapter(arrayAdapter);
 
         registerForContextMenu(listView);
-//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-//                                           int pos, long id) {
-//                listItem = adapterList.get(pos).toString();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//                builder.setMessage("Delete Item?")
-//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                adapterList.remove(listItem);
-//                                arrayAdapter = new ArrayAdapter<String>(
-//                                        MainActivity.this,
-//                                        R.layout.list_element,
-//                                        R.id.element_text,
-//                                        adapterList
-//                                );
-//                                listView.setAdapter(arrayAdapter);
-//                            }
-//                        })
-//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) { }
-//                        }).show();
-//
-//                return true;
-//            }
-//        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, final int pos, long arg3) {
@@ -81,23 +53,6 @@ public class MainActivity extends ActionBarActivity {
                 if (checkBox.isChecked()) {
                     Toast.makeText(MainActivity.this, "Task Complete!", Toast.LENGTH_SHORT).show();
                 }
-//
-//                listItem = adapterList.get(pos).toString();
-//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//                builder.setMessage("Edit Item?")
-//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Intent intent = new Intent(MainActivity.this, ModifyTaskListActivity.class);
-//                                intent.putExtra("itemToEdit", listItem);
-//                                intent.putExtra("pos", pos);
-//                                startActivityForResult(intent, EDIT_TASK);
-//                            }
-//                        })
-//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) { }
-//                        }).show();
             }
         });
     }
@@ -106,10 +61,6 @@ public class MainActivity extends ActionBarActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.list_view) {
-//            ListView lv = (ListView) v;
-//            AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) menuInfo;
-//            String obj = (String) lv.getItemAtPosition(acmi.position);
-
             menu.add(Menu.NONE, R.id.action_edit_task, Menu.NONE, R.string.action_edit_task);
             menu.add(Menu.NONE, R.id.action_remove_task, Menu.NONE, R.string.action_remove_task);
         }
@@ -145,8 +96,6 @@ public class MainActivity extends ActionBarActivity {
                 return super.onContextItemSelected(item);
         }
     }
-
-
 
     public void onCheckboxClicked(View view) {
         if (((CheckBox) view).isChecked()) {
